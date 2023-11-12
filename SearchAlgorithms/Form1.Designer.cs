@@ -49,7 +49,7 @@
             this.ComboBoxSearch = new System.Windows.Forms.ComboBox();
             this.ButtonUndoVertex = new System.Windows.Forms.Button();
             this.ButtonUndoEdge = new System.Windows.Forms.Button();
-            this.LogBox = new System.Windows.Forms.GroupBox();
+            this.LogBox = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.TrackbarSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxGraph)).BeginInit();
             this.SuspendLayout();
@@ -275,12 +275,12 @@
             // 
             // LogBox
             // 
-            this.LogBox.Enabled = false;
-            this.LogBox.Location = new System.Drawing.Point(757, 307);
+            this.LogBox.Location = new System.Drawing.Point(757, 289);
             this.LogBox.Name = "LogBox";
-            this.LogBox.Size = new System.Drawing.Size(379, 431);
-            this.LogBox.TabIndex = 23;
-            this.LogBox.TabStop = false;
+            this.LogBox.ReadOnly = true;
+            this.LogBox.Size = new System.Drawing.Size(379, 449);
+            this.LogBox.TabIndex = 25;
+            this.LogBox.Text = "";
             // 
             // Form1
             // 
@@ -341,6 +341,6 @@
         private ComboBox ComboBoxSearch;
         private Button ButtonUndoVertex;
         private Button ButtonUndoEdge;
-        private GroupBox LogBox;
+        private RichTextBox LogBox;
     }
 }

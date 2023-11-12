@@ -10,6 +10,7 @@ namespace SearchAlgorithms
         public List<Vertex> Vertices= new List<Vertex>();
         public List<Edge> Edges= new List<Edge>();  
         public Graph Graph = new Graph();
+        public List<string> Logs = new List<string>();
 
         private bool isPaused = true;
         char ID = 'A';
@@ -162,6 +163,7 @@ namespace SearchAlgorithms
                 MessageBox.Show("Select a starting vertex!");
                 return;
             }
+            LogBox.Text = "";
             ButtonPause.Enabled = true;
             isPaused = false;
             ButtonPause.Text = "Pause";
@@ -170,12 +172,12 @@ namespace SearchAlgorithms
             
             if(ButtonBFS.Checked)
             {
-                List<Vertex> order = Graph.BFS_order(Vertices, start, search, Vertices.Count);
+                List<Vertex> order = BFS_order(Vertices, start, search, Vertices.Count);
                 traverse(order);
             }
             else if (ButtonDFS.Checked) 
             {
-                List<Vertex> order = Graph.DFS_order(Vertices, start, search, Vertices.Count);
+                List<Vertex> order = DFS_order(Vertices, start, search, Vertices.Count);
                 traverse(order);
             }
             isPaused = true;
@@ -196,6 +198,7 @@ namespace SearchAlgorithms
             Vertex u = ComboBoxSearch.SelectedItem as Vertex;
 
             int diameter = 50;
+            int idx = 0;
             foreach (Vertex v in vertices) 
             {
 
@@ -209,15 +212,16 @@ namespace SearchAlgorithms
                 g.FillEllipse(redBrush, x, y, diameter, diameter);
                 g.DrawEllipse(blackBrush, x, y, diameter, diameter);
                 g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);
-                if(v.Equals(u))
+                LogBox.Text += Logs[idx++];
+                if (v.Equals(u))
                 {
                     g.FillEllipse(yellowBrush, x, y, diameter, diameter);
                     g.DrawEllipse(blackBrush, x, y, diameter, diameter);
                     g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);
 
                 }
-
-                await Task.Delay(1000/(TrackbarSpeed.Value + 1));
+                
+                await Task.Delay(10000/(TrackbarSpeed.Value + 1));
 
                 g.FillEllipse(greenBrush, x, y, diameter, diameter);
                 g.DrawEllipse(blackBrush, x, y, diameter, diameter);
@@ -313,6 +317,92 @@ namespace SearchAlgorithms
             RefreshSource();
             PictureBoxGraph.Update();
             PaintEdges();
+        }
+
+        public List<Vertex> BFS_order(List<Vertex> vertices, Vertex start, Vertex search, int dimension)
+        {
+            LogBox.Text = "";
+            Logs.Clear();
+            string s = "";
+            List<Vertex> order = new List<Vertex>();
+            Queue<Vertex> queue = new Queue<Vertex>();
+
+            queue.Enqueue(start);
+            //s += ($"Enqueuing starting vertex {start} in queue.\nQueue size = {queue.Count}\n");
+
+            
+            while (queue.Count > 0)
+            {
+                Vertex curr = queue.Dequeue();
+                s = "";
+                order.Add(curr);
+                
+                if (curr.Equals(search))
+                {
+                    Logs.Add("FOUND VERTEX BEING SEARCHED!!!\n\n\n");
+                    return order;
+                }
+                s += ($"Current Vertex being dequeued = vertex {curr}\n\n");
+                Logs.Add(s);
+                for (int i = 0; i < dimension; i++)
+                {
+                    if (Graph.Matrix[curr.IDX, i] > 0 && !curr.Has(vertices[i]))
+                    {
+                        Logs[Logs.Count-1] += ($"Vertex {curr} can go to vertex {vertices[i]} with cost {Graph.Matrix[curr.IDX, i]}\n");
+                        Vertex copy = new Vertex(vertices[i]);
+                        copy.Ancestors.Add(curr);
+                        copy.Ancestors.AddRange(curr.Ancestors);
+                        queue.Enqueue(copy);
+                        Logs[Logs.Count - 1] += ($"Vertex {copy} being enqueued in Queue\n\n"); 
+
+                    }
+                }
+                Logs[Logs.Count - 1] += ($"Queue size = {queue.Count}\n\n\n");
+                
+            }
+            return order;
+        }
+
+        public List<Vertex> DFS_order(List<Vertex> vertices, Vertex start, Vertex search, int dimension)
+        {
+            LogBox.Text = "";
+            Logs.Clear();
+            string s = "";
+            List<Vertex> order = new List<Vertex>();
+            Stack<Vertex> stack = new Stack<Vertex>();
+
+            stack.Push(start);
+            order.Add(start);
+            Logs.Add($"Pusing starting vertex {start} in Stack\nStack size = {stack.Count}\n");
+            while (stack.Count > 0)
+            {
+                s = "";
+                Vertex curr = stack.Pop();
+                s += ($"Current Vertex being popped = vertex {curr}\n");
+                if (curr.Equals(search)) 
+                {
+                    Logs.Add("FOUND VERTEX BEING SEARCHED!!!");
+                    return order; 
+                }
+                //order.Add(curr);
+                for (int i = 0; i < dimension; i++)
+                {
+                    if (Graph.Matrix[curr.IDX, i] > 0 && !curr.Has(vertices[i]))
+                    {
+                        s += ($"Vertex {curr} can go to vertex {vertices[i]} with cost {Graph.Matrix[curr.IDX, i]}\n");
+                        Vertex copy = new Vertex(vertices[i]);
+                        copy.Ancestors.Add(curr);
+                        copy.Ancestors.AddRange(curr.Ancestors);
+                        stack.Push(copy);
+                        order.Add(copy);
+                        s += ($"Vertex {copy} pushed in Stack\n");
+                        Logs.Add(s);
+                        s = "";
+                    }
+                }
+                Logs[Logs.Count - 1] += ($"Stack size = {stack.Count}.\n");
+            }
+            return order;
         }
 
         private void RefreshSource()

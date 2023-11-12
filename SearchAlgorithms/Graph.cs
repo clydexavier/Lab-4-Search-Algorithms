@@ -42,61 +42,7 @@ namespace SearchAlgorithms
             }
         }
 
-        public List<Vertex> BFS_order(List<Vertex> vertices,Vertex start, Vertex search ,int dimension)
-        {
-            List<Vertex> order = new List<Vertex>();
-            Queue<Vertex> queue = new Queue<Vertex>();
-
-            queue.Enqueue(start);  
-            order.Add(start);
-            while(queue.Count > 0)
-            {
-                Vertex curr = queue.Dequeue();
-                order.Add(curr);
-                if (curr.Equals(search)) return order;
-                for (int i = 0; i < dimension; i++)
-                {
-                    if (Matrix[curr.IDX, i] > 0 && !curr.Has(vertices[i]))
-                    {
-                        Vertex copy = new Vertex(vertices[i]);
-                        copy.Ancestors.Add(curr);
-                        copy.Ancestors.AddRange(curr.Ancestors);
-                        queue.Enqueue(copy);
-
-
-
-                    }
-                }
-            }
-            return order;
-        }
-
-        public List<Vertex> DFS_order(List<Vertex> vertices, Vertex start,Vertex search ,int dimension) 
-        {
-            List<Vertex> order = new List<Vertex>();
-            Stack<Vertex> stack = new Stack<Vertex>();
-
-            stack.Push(start);
-            order.Add(start);
-            while(stack.Count > 0) 
-            {
-                Vertex curr = stack.Pop();
-                if(curr.Equals(search)) return order;
-                //order.Add(curr);
-                for(int i = 0; i < dimension; i++) 
-                {
-                    if (Matrix[curr.IDX, i] > 0 && !curr.Has(vertices[i]))
-                    {
-                        Vertex copy = new Vertex(vertices[i]);
-                        copy.Ancestors.Add(curr);
-                        copy.Ancestors.AddRange(curr.Ancestors);
-                        stack.Push(copy);
-                        order.Add(copy);
-                    }
-                }
-            }
-            return order;
-        }
+        
 
 
 
