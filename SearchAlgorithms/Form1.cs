@@ -11,6 +11,10 @@ namespace SearchAlgorithms
         public List<Edge> Edges= new List<Edge>();  
         public Graph Graph = new Graph();
         public List<string> Logs = new List<string>();
+        public List<Vertex> Path = new List<Vertex>();
+        private int CurrIdx = 0;
+        Vertex u;
+        Graphics g;
 
         private bool isPaused = true;
         char ID = 'A';
@@ -18,6 +22,7 @@ namespace SearchAlgorithms
         public Form1()
         {
             InitializeComponent();
+            g = this.PictureBoxGraph.CreateGraphics();
         }
 
 
@@ -163,6 +168,8 @@ namespace SearchAlgorithms
                 MessageBox.Show("Select a starting vertex!");
                 return;
             }
+
+            this.u = ComboBoxSearch.SelectedItem as Vertex;
             LogBox.Text = "";
             ButtonPause.Enabled = true;
             isPaused = false;
@@ -172,70 +179,53 @@ namespace SearchAlgorithms
             
             if(ButtonBFS.Checked)
             {
-                List<Vertex> order = BFS_order(Vertices, start, search, Vertices.Count);
-                traverse(order);
+                Path = BFS_order(Vertices, start, search, Vertices.Count);
+                
+
             }
             else if (ButtonDFS.Checked) 
             {
-                List<Vertex> order = DFS_order(Vertices, start, search, Vertices.Count);
-                traverse(order);
+                Path = DFS_order(Vertices, start, search, Vertices.Count);
+                
             }
-            isPaused = true;
-            ButtonPause.Text = "Play";
-            ButtonPause.Enabled = false;
+            InitAnimation();
             
+        }
+
+        private void InitAnimation()
+        {
+
+            CurrIdx = 0;
+
+            AnimationClock.Enabled = true;
+            AnimationClock.Start();
+
         }
 
         public async void traverse(List<Vertex> vertices)
         {
-            Graphics g = PictureBoxGraph.CreateGraphics();
 
-            // Create a green brush
-            Brush greenBrush = new SolidBrush(Color.Green);
-            Brush redBrush = new SolidBrush(Color.Red);
-            Brush yellowBrush = new SolidBrush(Color.Yellow);
-            Pen blackBrush = new Pen(Color.Black);
-            Vertex u = ComboBoxSearch.SelectedItem as Vertex;
 
-            int diameter = 50;
-            int idx = 0;
-            foreach (Vertex v in vertices) 
-            {
 
-                
-                int x = v.Location.X - diameter / 2;
-                int y = v.Location.Y - diameter / 2;
 
-                int textX = v.Location.X - diameter / 8;
-                int textY = v.Location.Y - diameter / 8;
-
-                g.FillEllipse(redBrush, x, y, diameter, diameter);
-                g.DrawEllipse(blackBrush, x, y, diameter, diameter);
-                g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);
-                LogBox.Text += Logs[idx++];
-                if (v.Equals(u))
-                {
-                    g.FillEllipse(yellowBrush, x, y, diameter, diameter);
-                    g.DrawEllipse(blackBrush, x, y, diameter, diameter);
-                    g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);
-
-                }
-                
-                await Task.Delay(10000/(TrackbarSpeed.Value + 1));
-
-                g.FillEllipse(greenBrush, x, y, diameter, diameter);
-                g.DrawEllipse(blackBrush, x, y, diameter, diameter);
-                g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);
-            }
-
-            greenBrush.Dispose();
-            g.Dispose();
         }
 
 
         private void ButtonPause_Click(object sender, EventArgs e)
         {
-            //if(isPaused)
+            if(isPaused)
+            {
+                AnimationClock.Start();
+                isPaused = false;
+                ButtonPause.Text = "Pause";
+                
+            }
+            else
+            {
+                AnimationClock.Stop();
+                isPaused = true;
+                ButtonPause.Text = "Play";
+            }
         }
 
         private void PaintVertex()
@@ -328,7 +318,6 @@ namespace SearchAlgorithms
             Queue<Vertex> queue = new Queue<Vertex>();
 
             queue.Enqueue(start);
-            //s += ($"Enqueuing starting vertex {start} in queue.\nQueue size = {queue.Count}\n");
 
             
             while (queue.Count > 0)
@@ -416,6 +405,58 @@ namespace SearchAlgorithms
             ComboBoxTo.DataSource = new List<Vertex>(Vertices);
             ComboBoxStart.DataSource = Vertices;
             ComboBoxSearch.DataSource = new List<Vertex>(Vertices);
+        }
+
+        private void AnimationClock_Tick(object sender, EventArgs e)
+        {
+            
+           
+            if(CurrIdx >= Path.Count)
+            {
+                AnimationClock.Stop();
+                return;
+
+            }
+            int diameter = 50;
+            int idx = 0;
+
+            Vertex v = Path[CurrIdx];
+           
+
+            
+            if(CurrIdx > 0)
+            {
+                Vertex vv = Path[CurrIdx- 1];
+                int xx = vv.Location.X - diameter / 2;
+                int yy = vv.Location.Y - diameter / 2;
+
+                int textXX = vv.Location.X - diameter / 8;
+                int textYY = vv.Location.Y - diameter / 8;
+
+                g.FillEllipse(Brushes.Green, xx, yy, diameter, diameter);
+                g.DrawEllipse(Pens.Black, xx, yy, diameter, diameter);
+                g.DrawString(vv.ID.ToString(), this.Font, Brushes.White, textXX, textYY);
+            }
+
+            int x = v.Location.X - diameter / 2;
+            int y = v.Location.Y - diameter / 2;
+
+            int textX = v.Location.X - diameter / 8;
+            int textY = v.Location.Y - diameter / 8;
+
+
+            g.FillEllipse(Brushes.Red, x, y, diameter, diameter);
+            g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
+            g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);
+            LogBox.Text += Logs[idx++];
+            if (v.Equals(u))
+            {
+                g.FillEllipse(Brushes.Yellow, x, y, diameter, diameter);
+                g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
+                g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);
+
+            }
+            CurrIdx++;
         }
     }
 }

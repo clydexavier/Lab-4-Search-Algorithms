@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.ButtonRun = new System.Windows.Forms.Button();
             this.TrackbarSpeed = new System.Windows.Forms.TrackBar();
             this.ButtonBFS = new System.Windows.Forms.RadioButton();
@@ -50,6 +51,7 @@
             this.ButtonUndoVertex = new System.Windows.Forms.Button();
             this.ButtonUndoEdge = new System.Windows.Forms.Button();
             this.LogBox = new System.Windows.Forms.RichTextBox();
+            this.AnimationClock = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.TrackbarSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxGraph)).BeginInit();
             this.SuspendLayout();
@@ -282,6 +284,11 @@
             this.LogBox.TabIndex = 25;
             this.LogBox.Text = "";
             // 
+            // AnimationClock
+            // 
+            this.AnimationClock.Interval = 1000;
+            this.AnimationClock.Tick += new System.EventHandler(this.AnimationClock_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -342,5 +349,6 @@
         private Button ButtonUndoVertex;
         private Button ButtonUndoEdge;
         private RichTextBox LogBox;
+        private System.Windows.Forms.Timer AnimationClock;
     }
 }

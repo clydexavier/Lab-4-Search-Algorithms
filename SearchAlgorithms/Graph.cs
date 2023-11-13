@@ -41,11 +41,6 @@ namespace SearchAlgorithms
                 Matrix[e.To.IDX, e.From.IDX] = e.Cost;
             }
         }
-
-        
-
-
-
         public void AddVertex(Vertex vertex)
         {
             Validate(() => !adjacencyList.ContainsKey(vertex));
