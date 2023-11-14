@@ -37,8 +37,6 @@
             this.ButtonHC = new System.Windows.Forms.RadioButton();
             this.ButtonBnB = new System.Windows.Forms.RadioButton();
             this.ButtonAStar = new System.Windows.Forms.RadioButton();
-            this.AddVertex = new System.Windows.Forms.CheckBox();
-            this.AddEdge = new System.Windows.Forms.CheckBox();
             this.ButtonAdd = new System.Windows.Forms.Button();
             this.ComboBoxFrom = new System.Windows.Forms.ComboBox();
             this.ComboBoxTo = new System.Windows.Forms.ComboBox();
@@ -58,11 +56,15 @@
             this.PanelTop = new System.Windows.Forms.Panel();
             this.Heading = new System.Windows.Forms.Label();
             this.PanelTopNavigation = new System.Windows.Forms.Panel();
+            this.TextBoxBeam = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.PanelLeft = new System.Windows.Forms.Panel();
             this.PictureBoxGraph = new System.Windows.Forms.PictureBox();
             this.PanelRight = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.AddEdge = new System.Windows.Forms.RadioButton();
+            this.AddVertex = new System.Windows.Forms.RadioButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.LogBox = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.TrackbarSpeed)).BeginInit();
@@ -72,6 +74,7 @@
             this.PanelLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxGraph)).BeginInit();
             this.PanelRight.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -82,9 +85,9 @@
             this.ButtonRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonRun.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.ButtonRun.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.ButtonRun.Location = new System.Drawing.Point(770, 6);
+            this.ButtonRun.Location = new System.Drawing.Point(831, 6);
             this.ButtonRun.Name = "ButtonRun";
-            this.ButtonRun.Size = new System.Drawing.Size(107, 42);
+            this.ButtonRun.Size = new System.Drawing.Size(103, 54);
             this.ButtonRun.TabIndex = 0;
             this.ButtonRun.Text = "Run";
             this.ButtonRun.UseVisualStyleBackColor = false;
@@ -131,7 +134,7 @@
             this.ButtonBeam.AutoSize = true;
             this.ButtonBeam.Enabled = false;
             this.ButtonBeam.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.ButtonBeam.Location = new System.Drawing.Point(378, 36);
+            this.ButtonBeam.Location = new System.Drawing.Point(602, 40);
             this.ButtonBeam.Name = "ButtonBeam";
             this.ButtonBeam.Size = new System.Drawing.Size(72, 22);
             this.ButtonBeam.TabIndex = 4;
@@ -144,7 +147,7 @@
             this.ButtonHC.AutoSize = true;
             this.ButtonHC.Enabled = false;
             this.ButtonHC.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.ButtonHC.Location = new System.Drawing.Point(479, 36);
+            this.ButtonHC.Location = new System.Drawing.Point(479, 38);
             this.ButtonHC.Name = "ButtonHC";
             this.ButtonHC.Size = new System.Drawing.Size(115, 22);
             this.ButtonHC.TabIndex = 5;
@@ -170,7 +173,7 @@
             this.ButtonAStar.AutoSize = true;
             this.ButtonAStar.Enabled = false;
             this.ButtonAStar.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.ButtonAStar.Location = new System.Drawing.Point(602, 36);
+            this.ButtonAStar.Location = new System.Drawing.Point(378, 40);
             this.ButtonAStar.Name = "ButtonAStar";
             this.ButtonAStar.Size = new System.Drawing.Size(49, 22);
             this.ButtonAStar.TabIndex = 7;
@@ -178,62 +181,53 @@
             this.ButtonAStar.Text = "A*";
             this.ButtonAStar.UseVisualStyleBackColor = true;
             // 
-            // AddVertex
-            // 
-            this.AddVertex.AutoSize = true;
-            this.AddVertex.Location = new System.Drawing.Point(135, 47);
-            this.AddVertex.Name = "AddVertex";
-            this.AddVertex.Size = new System.Drawing.Size(104, 24);
-            this.AddVertex.TabIndex = 11;
-            this.AddVertex.Text = "Add Vertex";
-            this.AddVertex.UseVisualStyleBackColor = true;
-            // 
-            // AddEdge
-            // 
-            this.AddEdge.AutoSize = true;
-            this.AddEdge.Location = new System.Drawing.Point(245, 43);
-            this.AddEdge.Name = "AddEdge";
-            this.AddEdge.Size = new System.Drawing.Size(97, 24);
-            this.AddEdge.TabIndex = 12;
-            this.AddEdge.Text = "Add Edge";
-            this.AddEdge.UseVisualStyleBackColor = true;
-            this.AddEdge.CheckedChanged += new System.EventHandler(this.AddEdge_CheckedChanged);
-            // 
             // ButtonAdd
             // 
-            this.ButtonAdd.Location = new System.Drawing.Point(238, 167);
+            this.ButtonAdd.BackColor = System.Drawing.Color.Blue;
+            this.ButtonAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonAdd.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ButtonAdd.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ButtonAdd.Location = new System.Drawing.Point(14, 109);
             this.ButtonAdd.Name = "ButtonAdd";
-            this.ButtonAdd.Size = new System.Drawing.Size(165, 29);
+            this.ButtonAdd.Size = new System.Drawing.Size(388, 40);
             this.ButtonAdd.TabIndex = 13;
             this.ButtonAdd.Text = "Add";
-            this.ButtonAdd.UseVisualStyleBackColor = true;
+            this.ButtonAdd.UseVisualStyleBackColor = false;
             this.ButtonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
             // 
             // ComboBoxFrom
             // 
+            this.ComboBoxFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxFrom.Enabled = false;
+            this.ComboBoxFrom.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ComboBoxFrom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(154)))), ((int)(((byte)(180)))));
             this.ComboBoxFrom.FormattingEnabled = true;
-            this.ComboBoxFrom.Location = new System.Drawing.Point(24, 77);
+            this.ComboBoxFrom.Location = new System.Drawing.Point(14, 64);
             this.ComboBoxFrom.Name = "ComboBoxFrom";
-            this.ComboBoxFrom.Size = new System.Drawing.Size(121, 28);
+            this.ComboBoxFrom.Size = new System.Drawing.Size(130, 26);
             this.ComboBoxFrom.TabIndex = 14;
             // 
             // ComboBoxTo
             // 
+            this.ComboBoxTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxTo.Enabled = false;
+            this.ComboBoxTo.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ComboBoxTo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(154)))), ((int)(((byte)(180)))));
             this.ComboBoxTo.FormattingEnabled = true;
-            this.ComboBoxTo.Location = new System.Drawing.Point(166, 77);
+            this.ComboBoxTo.Location = new System.Drawing.Point(150, 65);
             this.ComboBoxTo.Name = "ComboBoxTo";
-            this.ComboBoxTo.Size = new System.Drawing.Size(121, 28);
+            this.ComboBoxTo.Size = new System.Drawing.Size(121, 26);
             this.ComboBoxTo.TabIndex = 15;
             // 
             // TextBoxWeight
             // 
             this.TextBoxWeight.Enabled = false;
-            this.TextBoxWeight.Location = new System.Drawing.Point(306, 78);
+            this.TextBoxWeight.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.TextBoxWeight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(154)))), ((int)(((byte)(180)))));
+            this.TextBoxWeight.Location = new System.Drawing.Point(275, 66);
             this.TextBoxWeight.Name = "TextBoxWeight";
             this.TextBoxWeight.PlaceholderText = "Weight";
-            this.TextBoxWeight.Size = new System.Drawing.Size(125, 27);
+            this.TextBoxWeight.Size = new System.Drawing.Size(125, 26);
             this.TextBoxWeight.TabIndex = 16;
             // 
             // ComboBoxStart
@@ -247,12 +241,16 @@
             // 
             // ButtonFinalize
             // 
-            this.ButtonFinalize.Location = new System.Drawing.Point(245, 202);
+            this.ButtonFinalize.BackColor = System.Drawing.Color.Blue;
+            this.ButtonFinalize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonFinalize.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ButtonFinalize.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ButtonFinalize.Location = new System.Drawing.Point(14, 165);
             this.ButtonFinalize.Name = "ButtonFinalize";
-            this.ButtonFinalize.Size = new System.Drawing.Size(165, 29);
+            this.ButtonFinalize.Size = new System.Drawing.Size(386, 40);
             this.ButtonFinalize.TabIndex = 18;
             this.ButtonFinalize.Text = "Finalize";
-            this.ButtonFinalize.UseVisualStyleBackColor = true;
+            this.ButtonFinalize.UseVisualStyleBackColor = false;
             this.ButtonFinalize.Click += new System.EventHandler(this.ButtonFinalize_Click);
             // 
             // ButtonPause
@@ -277,22 +275,30 @@
             // 
             // ButtonUndoVertex
             // 
-            this.ButtonUndoVertex.Location = new System.Drawing.Point(63, 167);
+            this.ButtonUndoVertex.BackColor = System.Drawing.Color.Blue;
+            this.ButtonUndoVertex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonUndoVertex.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ButtonUndoVertex.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ButtonUndoVertex.Location = new System.Drawing.Point(579, 8);
             this.ButtonUndoVertex.Name = "ButtonUndoVertex";
-            this.ButtonUndoVertex.Size = new System.Drawing.Size(165, 29);
+            this.ButtonUndoVertex.Size = new System.Drawing.Size(144, 38);
             this.ButtonUndoVertex.TabIndex = 21;
             this.ButtonUndoVertex.Text = "Undo Vertex";
-            this.ButtonUndoVertex.UseVisualStyleBackColor = true;
+            this.ButtonUndoVertex.UseVisualStyleBackColor = false;
             this.ButtonUndoVertex.Click += new System.EventHandler(this.ButtonUndo_Click);
             // 
             // ButtonUndoEdge
             // 
-            this.ButtonUndoEdge.Location = new System.Drawing.Point(63, 202);
+            this.ButtonUndoEdge.BackColor = System.Drawing.Color.Blue;
+            this.ButtonUndoEdge.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonUndoEdge.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ButtonUndoEdge.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ButtonUndoEdge.Location = new System.Drawing.Point(739, 6);
             this.ButtonUndoEdge.Name = "ButtonUndoEdge";
-            this.ButtonUndoEdge.Size = new System.Drawing.Size(169, 29);
+            this.ButtonUndoEdge.Size = new System.Drawing.Size(144, 40);
             this.ButtonUndoEdge.TabIndex = 22;
             this.ButtonUndoEdge.Text = "Undo Edge";
-            this.ButtonUndoEdge.UseVisualStyleBackColor = true;
+            this.ButtonUndoEdge.UseVisualStyleBackColor = false;
             this.ButtonUndoEdge.Click += new System.EventHandler(this.button1_Click);
             // 
             // AnimationClock
@@ -306,7 +312,7 @@
             this.PanelBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.PanelBottom.Location = new System.Drawing.Point(0, 692);
             this.PanelBottom.Name = "PanelBottom";
-            this.PanelBottom.Size = new System.Drawing.Size(1279, 58);
+            this.PanelBottom.Size = new System.Drawing.Size(1339, 58);
             this.PanelBottom.TabIndex = 27;
             // 
             // PanelNavigation
@@ -315,13 +321,15 @@
             this.PanelNavigation.Controls.Add(this.LabelAnimationSpeed);
             this.PanelNavigation.Controls.Add(this.ButtonStepForward);
             this.PanelNavigation.Controls.Add(this.ButtonStepBack);
+            this.PanelNavigation.Controls.Add(this.ButtonUndoVertex);
             this.PanelNavigation.Controls.Add(this.ButtonPause);
             this.PanelNavigation.Controls.Add(this.TrackbarSpeed);
+            this.PanelNavigation.Controls.Add(this.ButtonUndoEdge);
             this.PanelNavigation.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.PanelNavigation.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.PanelNavigation.Location = new System.Drawing.Point(0, 615);
             this.PanelNavigation.Name = "PanelNavigation";
-            this.PanelNavigation.Size = new System.Drawing.Size(1279, 77);
+            this.PanelNavigation.Size = new System.Drawing.Size(1339, 77);
             this.PanelNavigation.TabIndex = 28;
             // 
             // LabelAnimationSpeed
@@ -364,7 +372,7 @@
             this.PanelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.PanelTop.Location = new System.Drawing.Point(0, 0);
             this.PanelTop.Name = "PanelTop";
-            this.PanelTop.Size = new System.Drawing.Size(1279, 58);
+            this.PanelTop.Size = new System.Drawing.Size(1339, 58);
             this.PanelTop.TabIndex = 29;
             // 
             // Heading
@@ -381,6 +389,7 @@
             // PanelTopNavigation
             // 
             this.PanelTopNavigation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(241)))), ((int)(((byte)(244)))));
+            this.PanelTopNavigation.Controls.Add(this.TextBoxBeam);
             this.PanelTopNavigation.Controls.Add(this.label2);
             this.PanelTopNavigation.Controls.Add(this.label1);
             this.PanelTopNavigation.Controls.Add(this.ComboBoxStart);
@@ -395,11 +404,22 @@
             this.PanelTopNavigation.Dock = System.Windows.Forms.DockStyle.Top;
             this.PanelTopNavigation.Location = new System.Drawing.Point(0, 58);
             this.PanelTopNavigation.Name = "PanelTopNavigation";
-            this.PanelTopNavigation.Size = new System.Drawing.Size(1279, 77);
+            this.PanelTopNavigation.Size = new System.Drawing.Size(1339, 77);
             this.PanelTopNavigation.TabIndex = 30;
+            // 
+            // TextBoxBeam
+            // 
+            this.TextBoxBeam.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.TextBoxBeam.Enabled = false;
+            this.TextBoxBeam.Location = new System.Drawing.Point(680, 41);
+            this.TextBoxBeam.Name = "TextBoxBeam";
+            this.TextBoxBeam.PlaceholderText = "Beam W";
+            this.TextBoxBeam.Size = new System.Drawing.Size(125, 20);
+            this.TextBoxBeam.TabIndex = 26;
             // 
             // label2
             // 
+            this.label2.AutoEllipsis = true;
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(154)))), ((int)(((byte)(180)))));
@@ -429,7 +449,7 @@
             this.PanelLeft.Controls.Add(this.PictureBoxGraph);
             this.PanelLeft.Location = new System.Drawing.Point(0, 135);
             this.PanelLeft.Name = "PanelLeft";
-            this.PanelLeft.Size = new System.Drawing.Size(823, 480);
+            this.PanelLeft.Size = new System.Drawing.Size(883, 480);
             this.PanelLeft.TabIndex = 31;
             // 
             // PictureBoxGraph
@@ -438,7 +458,7 @@
             this.PictureBoxGraph.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PictureBoxGraph.Location = new System.Drawing.Point(0, 0);
             this.PictureBoxGraph.Name = "PictureBoxGraph";
-            this.PictureBoxGraph.Size = new System.Drawing.Size(823, 480);
+            this.PictureBoxGraph.Size = new System.Drawing.Size(883, 480);
             this.PictureBoxGraph.TabIndex = 11;
             this.PictureBoxGraph.TabStop = false;
             this.PictureBoxGraph.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PictureBoxGraph_MouseClick_1);
@@ -446,21 +466,55 @@
             // PanelRight
             // 
             this.PanelRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(117)))), ((int)(((byte)(230)))), ((int)(((byte)(218)))));
+            this.PanelRight.Controls.Add(this.panel2);
             this.PanelRight.Controls.Add(this.panel1);
-            this.PanelRight.Controls.Add(this.ButtonUndoVertex);
-            this.PanelRight.Controls.Add(this.AddEdge);
-            this.PanelRight.Controls.Add(this.ComboBoxFrom);
-            this.PanelRight.Controls.Add(this.AddVertex);
-            this.PanelRight.Controls.Add(this.ComboBoxTo);
-            this.PanelRight.Controls.Add(this.ButtonUndoEdge);
-            this.PanelRight.Controls.Add(this.TextBoxWeight);
-            this.PanelRight.Controls.Add(this.ButtonAdd);
-            this.PanelRight.Controls.Add(this.ButtonFinalize);
             this.PanelRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PanelRight.Location = new System.Drawing.Point(831, 135);
+            this.PanelRight.Location = new System.Drawing.Point(891, 135);
             this.PanelRight.Name = "PanelRight";
             this.PanelRight.Size = new System.Drawing.Size(448, 480);
             this.PanelRight.TabIndex = 32;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(241)))), ((int)(((byte)(244)))));
+            this.panel2.Controls.Add(this.AddEdge);
+            this.panel2.Controls.Add(this.AddVertex);
+            this.panel2.Controls.Add(this.ButtonAdd);
+            this.panel2.Controls.Add(this.ButtonFinalize);
+            this.panel2.Controls.Add(this.ComboBoxFrom);
+            this.panel2.Controls.Add(this.ComboBoxTo);
+            this.panel2.Controls.Add(this.TextBoxWeight);
+            this.panel2.Location = new System.Drawing.Point(16, 22);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(415, 220);
+            this.panel2.TabIndex = 24;
+            // 
+            // AddEdge
+            // 
+            this.AddEdge.AutoSize = true;
+            this.AddEdge.Font = new System.Drawing.Font("Verdana", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.AddEdge.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(154)))), ((int)(((byte)(180)))));
+            this.AddEdge.Location = new System.Drawing.Point(223, 14);
+            this.AddEdge.Name = "AddEdge";
+            this.AddEdge.Size = new System.Drawing.Size(177, 36);
+            this.AddEdge.TabIndex = 25;
+            this.AddEdge.TabStop = true;
+            this.AddEdge.Text = "Add Edge";
+            this.AddEdge.UseVisualStyleBackColor = true;
+            this.AddEdge.CheckedChanged += new System.EventHandler(this.AddEdge_CheckedChanged_1);
+            // 
+            // AddVertex
+            // 
+            this.AddVertex.AutoSize = true;
+            this.AddVertex.Font = new System.Drawing.Font("Verdana", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.AddVertex.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(154)))), ((int)(((byte)(180)))));
+            this.AddVertex.Location = new System.Drawing.Point(14, 14);
+            this.AddVertex.Name = "AddVertex";
+            this.AddVertex.Size = new System.Drawing.Size(203, 36);
+            this.AddVertex.TabIndex = 24;
+            this.AddVertex.TabStop = true;
+            this.AddVertex.Text = "Add Vertex";
+            this.AddVertex.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
@@ -478,6 +532,7 @@
             this.LogBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(241)))), ((int)(((byte)(244)))));
             this.LogBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LogBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LogBox.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.LogBox.Location = new System.Drawing.Point(0, 0);
             this.LogBox.Name = "LogBox";
             this.LogBox.Size = new System.Drawing.Size(415, 196);
@@ -489,14 +544,15 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(1279, 750);
+            this.ClientSize = new System.Drawing.Size(1339, 750);
             this.Controls.Add(this.PanelRight);
             this.Controls.Add(this.PanelLeft);
             this.Controls.Add(this.PanelTopNavigation);
             this.Controls.Add(this.PanelTop);
             this.Controls.Add(this.PanelNavigation);
             this.Controls.Add(this.PanelBottom);
-            this.MinimumSize = new System.Drawing.Size(1297, 797);
+            this.MaximumSize = new System.Drawing.Size(1357, 797);
+            this.MinimumSize = new System.Drawing.Size(1357, 797);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Activated += new System.EventHandler(this.Form1_Activated);
@@ -510,7 +566,8 @@
             this.PanelLeft.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxGraph)).EndInit();
             this.PanelRight.ResumeLayout(false);
-            this.PanelRight.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -526,8 +583,6 @@
         private RadioButton ButtonHC;
         private RadioButton ButtonBnB;
         private RadioButton ButtonAStar;
-        private CheckBox AddVertex;
-        private CheckBox AddEdge;
         private Button ButtonAdd;
         private ComboBox ComboBoxFrom;
         private ComboBox ComboBoxTo;
@@ -554,5 +609,9 @@
         private Label label1;
         private Panel panel1;
         private RichTextBox LogBox;
+        private RadioButton AddEdge;
+        private RadioButton AddVertex;
+        private Panel panel2;
+        private TextBox TextBoxBeam;
     }
 }

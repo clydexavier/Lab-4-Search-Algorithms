@@ -127,6 +127,7 @@ namespace SearchAlgorithms
             ButtonFinalize.Enabled = false;
 
             // Widges for animation now enabled since the graph is finalized
+            TextBoxBeam.Enabled = true;
             ButtonBFS.Enabled = true;
             ButtonDFS.Enabled = true;
             ButtonAStar.Enabled = true;
@@ -170,7 +171,12 @@ namespace SearchAlgorithms
             }
             else if (ButtonBeam.Checked)
             {
-                Path = Graph.Beam_order(Vertices, StartVertex, SearchVertex, Vertices.Count);
+                if(!int.TryParse(TextBoxBeam.Text, out int w))
+                {
+                    MessageBox.Show("Enter valid value.");
+                    return;
+                }
+                Path = Graph.Beam_order(Vertices, StartVertex, SearchVertex, Vertices.Count, w);
             }
             else if (ButtonHC.Checked)
             {
@@ -247,7 +253,7 @@ namespace SearchAlgorithms
                 int textY = v.Location.Y - diameter / 8;
 
                 // Drawing of vertices
-                g.FillEllipse(Brushes.Green, x, y, diameter, diameter);
+                g.FillEllipse(Brushes.Blue, x, y, diameter, diameter);
                 g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
                 g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);    
             }
@@ -371,7 +377,7 @@ namespace SearchAlgorithms
                 int textYY = PreviousVertex.Location.Y - diameter / 8;
 
                 // Recolors the previous vertex back to green
-                g.FillEllipse(Brushes.Green, xx, yy, diameter, diameter);
+                g.FillEllipse(Brushes.Blue, xx, yy, diameter, diameter);
                 g.DrawEllipse(Pens.Black, xx, yy, diameter, diameter);
                 g.DrawString(PreviousVertex.ID.ToString(), this.Font, Brushes.White, textXX, textYY);
             }
@@ -402,7 +408,7 @@ namespace SearchAlgorithms
                 
                 // Recolor the searched vertex back to green after two seconds
                /* await Task.Delay(2000);
-                g.FillEllipse(Brushes.Green, x, y, diameter, diameter);
+                g.FillEllipse(Brushes.Blue, x, y, diameter, diameter);
                 g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
                 g.DrawString(CurrentVertex.ID.ToString(), this.Font, Brushes.White, textX, textY);*/
 
@@ -440,7 +446,7 @@ namespace SearchAlgorithms
             int textY = e.Y - diameter / 8;
 
             // Fill a green circle and black outline and add a label
-            g.FillEllipse(Brushes.Green, x, y, diameter, diameter);
+            g.FillEllipse(Brushes.Blue, x, y, diameter, diameter);
             g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
             g.DrawString(VertexLabel.ToString(), this.Font, Brushes.White, textX, textY);
 
@@ -452,24 +458,7 @@ namespace SearchAlgorithms
             VertexLabel++;
             VertexIndex++;
         }
-        private void AddEdge_CheckedChanged(object sender, EventArgs e)
-        {
-            // Can only add edge if the add edge checklist is checked
-            // If not all the combo boxes are disabled
-            if (AddEdge.Checked)
-            {
-                ComboBoxFrom.Enabled = true;
-                ComboBoxTo.Enabled = true;
-                TextBoxWeight.Enabled = true;
-            }
-            else
-            {
-                ComboBoxFrom.Enabled = false;
-                ComboBoxTo.Enabled = false;
-                TextBoxWeight.Enabled = false;
-            }
-        }
-
+       
         private void Form1_Activated(object sender, EventArgs e)
         {
             // Handle the Activated event to force PictureBox to repaint
@@ -504,6 +493,22 @@ namespace SearchAlgorithms
             if (CurrentNodeIndex == Path.Count - 1) return;
             CurrentNodeIndex++;
             ButtonPause_Click(sender, e);
+        }
+
+        private void AddEdge_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (AddEdge.Checked)
+            {
+                ComboBoxFrom.Enabled = true;
+                ComboBoxTo.Enabled = true;
+                TextBoxWeight.Enabled = true;
+            }
+            else
+            {
+                ComboBoxFrom.Enabled = false;
+                ComboBoxTo.Enabled = false;
+                TextBoxWeight.Enabled = false;
+            }
         }
     }
 }
