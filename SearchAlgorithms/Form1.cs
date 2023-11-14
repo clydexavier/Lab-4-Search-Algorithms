@@ -7,18 +7,45 @@ namespace SearchAlgorithms
 {
     public partial class Form1 : Form
     {
+        public string Logs = "";
+
+
+        public bool AnimationPaused = false;
+        public bool AnimationRunning = false;
+        // Contains all the ertices in the graph
         public List<Vertex> Vertices= new List<Vertex>();
+        
+        // Contains all the edges in the graph
         public List<Edge> Edges= new List<Edge>();  
+
+        // Graph that is being used in the graph
+        // Contains the adjacency matrix and searching algorithms
         public Graph Graph = new Graph();
-        public List<string> Logs = new List<string>();
+
+        // Stores the path from starting vertex to the vertex that is being searched
         public List<Vertex> Path = new List<Vertex>();
-        private int CurrIdx = 0;
-        Vertex u;
+        
+        // Use for indexing current node that is being highlighted when animating
+        // the search path
+        private int CurrentNodeIndex = 0;
+
+        // Vertex that is being searched in every traversal
+        Vertex SearchVertex;
+        // Starting vertex of the graph when searching
+        Vertex StartVertex;
+        
+        // Object use when drawing the vertices
         Graphics g;
 
+        // Flag to know if the animation is currently paused
         private bool isPaused = true;
-        char ID = 'A';
-        int IDX = 0;
+        
+        // Used for labeling newly added vertices
+        char VertexLabel = 'A';
+
+        // Used for indexing newly added vertices
+        int VertexIndex = 0;
+        
         public Form1()
         {
             InitializeComponent();
@@ -28,116 +55,65 @@ namespace SearchAlgorithms
 
         private void PictureBoxGraph_MouseClick(object sender, MouseEventArgs e)
         {
-            if(AddVertex.Checked)
-            {
-                // Get the clicked point
-                Point clickPoint = e.Location;
-                Vertices.Add(new Vertex(ID, IDX,e.Location));
-
-
-
-                // Create a Graphics object from the PictureBox
-                Graphics g = PictureBoxGraph.CreateGraphics();
-
-                // Define the circle's position and size
-                int diameter = 50;
-                int x = clickPoint.X - diameter / 2;
-                int y = clickPoint.Y - diameter / 2;
-
-                // Create a green brush
-                Brush greenBrush = new SolidBrush(Color.Green);
-                Pen blackBrush = new Pen(Color.Black);
-
-                int textX = e.X - diameter/ 8;
-                int textY = e.Y - diameter / 8;
-                // Fill a green circle
-                g.FillEllipse(greenBrush, x, y, diameter, diameter);
-                g.DrawEllipse(blackBrush, x, y, diameter, diameter);
-                g.DrawString(ID.ToString(), this.Font, Brushes.White, textX, textY);
-
-                RefreshSource();
-
-                // Dispose of the brush and Graphics object
-                greenBrush.Dispose();
-                g.Dispose();
-                ID++;
-                IDX++;
-            }
-        }
-
-        private void AddEdge_CheckedChanged(object sender, EventArgs e)
-        {
-            if(AddEdge.Checked) 
-            {
-                ComboBoxFrom.Enabled = true;
-                ComboBoxTo.Enabled = true;
-                TextBoxWeight.Enabled = true;
-            }
-            else
-            {
-                ComboBoxFrom.Enabled = false;
-                ComboBoxTo.Enabled = false;
-                TextBoxWeight.Enabled = false;
-            }
             
         }
-
-        private void ComboBoxFrom_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
+       
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
+            // Checker used to ensure the user selected two vertcies when creating an edge
             if(ComboBoxFrom.SelectedIndex == -1 || ComboBoxTo.SelectedIndex == -1 || string.IsNullOrWhiteSpace(TextBoxWeight.Text)) 
             {
                 MessageBox.Show("Complete empty fields!");
                 return;
             }
+
+            // Checker used to make sure the inputted weight is valid i.e. int
             if(!int.TryParse(TextBoxWeight.Text, out int weight))
             {
                 MessageBox.Show("Input valid weight!");
                 return;
             }
+
+            // Checker used to make sure source vertex and destination vertex
+            // are different when creating an edge between the two of them
             if(ComboBoxFrom.SelectedIndex == ComboBoxTo.SelectedIndex)
             {
                 MessageBox.Show("Choose another destination vertex!");
                 return;
             }
 
+            // Source vertex
             Vertex start = Vertices[ComboBoxFrom.SelectedIndex];
+            // Destinatino vertex
             Vertex end = Vertices[ComboBoxTo.SelectedIndex];
+            // Add newly created edge to list of edges
             Edges.Add(new Edge(start, end, weight));
-           // MessageBox.Show($"Vertex {start} connected to vertex {end} with weight {weight}.");
             
-            Graphics g = PictureBoxGraph.CreateGraphics();
-            Pen pen = new Pen(Color.Black, 2);
+            // Font used for labeling
             Font font = new Font("Arial", 10);
-            Brush brush = new SolidBrush(Color.Black);
+            
+            // corrected location so that the label will be in center
             float textX = (start.Location.X + end.Location.X) / 2;
             float textY = (start.Location.Y + end.Location.Y) / 2;
 
-
-
-            
-
             // Draw the weight text at the calculated position
-            g.DrawString(weight.ToString(), font, brush, textX, textY);
-
-            g.DrawLine(pen, start.Location, end.Location);
+            g.DrawString(weight.ToString(), font, Brushes.Black, textX, textY);
+            g.DrawLine(Pens.Black, start.Location, end.Location);
+            // To make sure the line will not go inside tha circles' radius
             PaintVertex();
-
-            pen.Dispose();
-            g.Dispose();
-
         }
 
         private void ButtonFinalize_Click(object sender, EventArgs e)
         {
+            // Wont initialize the matrix if there is no edge.
             if(Edges.Count == 0)
             {
                 MessageBox.Show("Add at least one edge!");
                 return;
             }
+
+            // Disables all the combo box that is used when adding edges and vertices
+            // Cannot add vertex and edge ones the graph is finalized
             ComboBoxFrom.Enabled = false;
             ComboBoxTo.Enabled = false;
             TextBoxWeight.Enabled = false;
@@ -145,6 +121,7 @@ namespace SearchAlgorithms
             AddVertex.Enabled = false;
             ButtonAdd.Enabled = false;
 
+            // Widges for animation now enabled since the graph is finalized
             LogBox.Enabled = true;
             ButtonBFS.Enabled = true;
             ButtonDFS.Enabled = true;
@@ -158,7 +135,6 @@ namespace SearchAlgorithms
             TrackbarSpeed.Enabled = true;
             Graph.initMtx(Vertices.Count);
             Graph.updateMtx(Edges);
-
         }
 
         private void ButtonRun_Click(object sender, EventArgs e)
@@ -168,58 +144,70 @@ namespace SearchAlgorithms
                 MessageBox.Show("Select a starting vertex!");
                 return;
             }
-
-            this.u = ComboBoxSearch.SelectedItem as Vertex;
-            LogBox.Text = "";
+            // Enables the pause button and currently set as paused
             ButtonPause.Enabled = true;
             isPaused = false;
-            ButtonPause.Text = "Pause";
-            Vertex start = ComboBoxStart.SelectedItem as Vertex;
-            Vertex search = ComboBoxSearch.SelectedItem as Vertex;
+
+            SearchVertex = ComboBoxSearch.SelectedItem as Vertex;
+            StartVertex = ComboBoxStart.SelectedItem as Vertex;
             
+            //
             if(ButtonBFS.Checked)
             {
-                Path = BFS_order(Vertices, start, search, Vertices.Count);
-                
-
+                // Path now contains the BFS path from starting vertex until the searched vertex
+                Path = Graph.BFS_order(Vertices, StartVertex, SearchVertex, Vertices.Count);
             }
             else if (ButtonDFS.Checked) 
             {
-                Path = DFS_order(Vertices, start, search, Vertices.Count);
+                // Path now contains the DFS path from starting vertex until the searched vertex
+                Path = Graph.DFS_order(Vertices, StartVertex, SearchVertex, Vertices.Count);
                 
             }
+            else if (ButtonBeam.Checked)
+            {
+                Path = Graph.Beam_order(Vertices, StartVertex, SearchVertex, Vertices.Count);
+            }
+            else if (ButtonHC.Checked)
+            {
+                Path = Graph.HillClimbing_order(Vertices, StartVertex, SearchVertex, Vertices.Count);
+            }
+            else if (ButtonBnB.Checked) 
+            {
+                Path = Graph.BranchAndBound_order(Vertices, StartVertex, SearchVertex, Vertices.Count);
+            }
+            else if (ButtonAStar.Checked)
+            {
+                Path = Graph.AStar_order(Vertices, StartVertex, SearchVertex, Vertices.Count);
+            }
+            //Initializes the animation process
             InitAnimation();
-            
         }
-
+        
         private void InitAnimation()
         {
-
-            CurrIdx = 0;
-
+            // Starts the clock for animation
+            // Initializes the variable used to index the vertecies in path
+            CurrentNodeIndex = 0;
             AnimationClock.Enabled = true;
             AnimationClock.Start();
-
+            AnimationRunning = true;
+            AnimationPaused = false;
         }
-
-        public async void traverse(List<Vertex> vertices)
-        {
-
-
-
-
-        }
-
-
         private void ButtonPause_Click(object sender, EventArgs e)
         {
+            // If currently paused, start the clock again 
+            // Button text will now change to pause again since 
+            // the animation will now be playing
             if(isPaused)
             {
                 AnimationClock.Start();
                 isPaused = false;
-                ButtonPause.Text = "Pause";
-                
+                ButtonPause.Text = "Pause";    
             }
+
+            // Else if currently playing, the clock will pause
+            // Button text will now change to play again since
+            // the animation is currently on pause
             else
             {
                 AnimationClock.Stop();
@@ -227,175 +215,105 @@ namespace SearchAlgorithms
                 ButtonPause.Text = "Play";
             }
         }
-
+ 
         private void PaintVertex()
         {
-            Graphics g = PictureBoxGraph.CreateGraphics();
-            // Create a green brush
-            Brush greenBrush = new SolidBrush(Color.Green);
-            Brush redBrush = new SolidBrush(Color.Red);
-            Brush yellowBrush = new SolidBrush(Color.Yellow);
-            Pen blackBrush = new Pen(Color.Black);
-            Vertex u = ComboBoxSearch.SelectedItem as Vertex;
-
+            /*
+             * Function used to redraw all the vertices
+             */
+            // Diameter of each vertex
             int diameter = 50;
             foreach (Vertex v in Vertices)
             {
+                // Corrected location of each vertex to center the drawing
                 int x = v.Location.X - diameter / 2;
                 int y = v.Location.Y - diameter / 2;
 
+                // Corrected location to center the label of each vertex
                 int textX = v.Location.X - diameter / 8;
                 int textY = v.Location.Y - diameter / 8;
 
-                g.FillEllipse(redBrush, x, y, diameter, diameter);
-                g.DrawEllipse(blackBrush, x, y, diameter, diameter);
-                g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);
-                
-                g.FillEllipse(greenBrush, x, y, diameter, diameter);
-                g.DrawEllipse(blackBrush, x, y, diameter, diameter);
-                g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);
+                // Drawing of vertices
+                g.FillEllipse(Brushes.Green, x, y, diameter, diameter);
+                g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
+                g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);    
             }
-
-            greenBrush.Dispose();
-            g.Dispose();
         }
 
         private void PaintEdges()
         {
-            Graphics g = PictureBoxGraph.CreateGraphics();
-            Pen pen = new Pen(Color.Black, 2);
-            Font font = new Font("Arial", 10);
-            Brush brush = new SolidBrush(Color.Black);
-
+            /*
+             * Function used to redraw all the edges
+             */
             foreach(Edge edge in Edges) 
             {
+                // Location of the label weights
                 float textX = (edge.From.Location.X + edge.To.Location.X) / 2;
                 float textY = (edge.From.Location.Y + edge.To.Location.Y) / 2;
                 // Draw the weight text at the calculated position
-                g.DrawString(edge.Cost.ToString(), font, brush, textX, textY);
-
-                g.DrawLine(pen, edge.From.Location, edge.To.Location);
-
+                g.DrawString(edge.Cost.ToString(), this.Font, Brushes.Black, textX, textY);
+                g.DrawLine(Pens.Black, edge.From.Location, edge.To.Location);
             }
-
-
-            pen.Dispose();
-            g.Dispose();
-
         }
 
         private void ButtonUndo_Click(object sender, EventArgs e)
         {
+            // If list of vertex is empty, you cant undo any vertex
             if (Vertices.Count <= 0) return;
 
-            IDX--;
-            ID--;
+            Vertex VertexToRemove = Vertices[Vertices.Count - 1];
+
+            // Removes the edges where vertex to remove is connected
+            List<Edge> EdgesToRemove = new List<Edge>();
+            foreach(Edge edge in Edges)
+            {
+                if(edge.From.Equals(VertexToRemove) || edge.To.Equals(VertexToRemove))
+                {
+                    EdgesToRemove.Add(edge);
+                }
+            }
+            // LONG CUT WAY BECAUSE SHORTCUT WILL THROW ERROR FOR SOME REASONS :)))))
+            foreach (Edge edge in EdgesToRemove) 
+            {
+                Edges.Remove(edge);
+            }
+
+            // Removes the last added vertex
+            Vertices.RemoveAt(Vertices.Count - 1);
+
+            // Vertex label and index decrements after deleting last vertex that was added
+            VertexLabel--;
+            VertexIndex--;
+            
+            // Updates the picture box after the last vertex was removed
             PictureBoxGraph.Image = null;
-            Vertices.RemoveAt(Vertices.Count-1);
             RefreshSource();
             PictureBoxGraph.Update();
+            PaintEdges();
             PaintVertex();
-           
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // If list of edge is empty, you cant undo any edge
             if (Edges.Count <= 0) return;
 
+            // Removes the last added edge
+            Edges.RemoveAt(Edges.Count - 1);
+
+            // Updates the picture box after the last vertex was removed
             PictureBoxGraph.Image= null;
-            Edges.RemoveAt(Edges.Count-1);
             RefreshSource();
             PictureBoxGraph.Update();
             PaintEdges();
-        }
-
-        public List<Vertex> BFS_order(List<Vertex> vertices, Vertex start, Vertex search, int dimension)
-        {
-            LogBox.Text = "";
-            Logs.Clear();
-            string s = "";
-            List<Vertex> order = new List<Vertex>();
-            Queue<Vertex> queue = new Queue<Vertex>();
-
-            queue.Enqueue(start);
-
-            
-            while (queue.Count > 0)
-            {
-                Vertex curr = queue.Dequeue();
-                s = "";
-                order.Add(curr);
-                
-                if (curr.Equals(search))
-                {
-                    Logs.Add("FOUND VERTEX BEING SEARCHED!!!\n\n\n");
-                    return order;
-                }
-                s += ($"Current Vertex being dequeued = vertex {curr}\n\n");
-                Logs.Add(s);
-                for (int i = 0; i < dimension; i++)
-                {
-                    if (Graph.Matrix[curr.IDX, i] > 0 && !curr.Has(vertices[i]))
-                    {
-                        Logs[Logs.Count-1] += ($"Vertex {curr} can go to vertex {vertices[i]} with cost {Graph.Matrix[curr.IDX, i]}\n");
-                        Vertex copy = new Vertex(vertices[i]);
-                        copy.Ancestors.Add(curr);
-                        copy.Ancestors.AddRange(curr.Ancestors);
-                        queue.Enqueue(copy);
-                        Logs[Logs.Count - 1] += ($"Vertex {copy} being enqueued in Queue\n\n"); 
-
-                    }
-                }
-                Logs[Logs.Count - 1] += ($"Queue size = {queue.Count}\n\n\n");
-                
-            }
-            return order;
-        }
-
-        public List<Vertex> DFS_order(List<Vertex> vertices, Vertex start, Vertex search, int dimension)
-        {
-            LogBox.Text = "";
-            Logs.Clear();
-            string s = "";
-            List<Vertex> order = new List<Vertex>();
-            Stack<Vertex> stack = new Stack<Vertex>();
-
-            stack.Push(start);
-            order.Add(start);
-            Logs.Add($"Pusing starting vertex {start} in Stack\nStack size = {stack.Count}\n");
-            while (stack.Count > 0)
-            {
-                s = "";
-                Vertex curr = stack.Pop();
-                s += ($"Current Vertex being popped = vertex {curr}\n");
-                if (curr.Equals(search)) 
-                {
-                    Logs.Add("FOUND VERTEX BEING SEARCHED!!!");
-                    return order; 
-                }
-                //order.Add(curr);
-                for (int i = 0; i < dimension; i++)
-                {
-                    if (Graph.Matrix[curr.IDX, i] > 0 && !curr.Has(vertices[i]))
-                    {
-                        s += ($"Vertex {curr} can go to vertex {vertices[i]} with cost {Graph.Matrix[curr.IDX, i]}\n");
-                        Vertex copy = new Vertex(vertices[i]);
-                        copy.Ancestors.Add(curr);
-                        copy.Ancestors.AddRange(curr.Ancestors);
-                        stack.Push(copy);
-                        order.Add(copy);
-                        s += ($"Vertex {copy} pushed in Stack\n");
-                        Logs.Add(s);
-                        s = "";
-                    }
-                }
-                Logs[Logs.Count - 1] += ($"Stack size = {stack.Count}.\n");
-            }
-            return order;
+            PaintVertex();
         }
 
         private void RefreshSource()
-        {
+        { 
+            /*
+             * Refreshes the data source of combo box after adding or deleting a vertex or edge
+             */
             ComboBoxFrom.DataSource = null;
             ComboBoxTo.DataSource = null;
             ComboBoxStart.DataSource = null;
@@ -407,56 +325,152 @@ namespace SearchAlgorithms
             ComboBoxSearch.DataSource = new List<Vertex>(Vertices);
         }
 
-        private void AnimationClock_Tick(object sender, EventArgs e)
+        private async void AnimationClock_Tick(object sender, EventArgs e)
         {
-            
-           
-            if(CurrIdx >= Path.Count)
+            /*
+             * EACH TICK, THE CURRENT VERTEX IN THE PATHS WILL BE HIGHLIGHTED
+             */
+
+            // if index out of bounds, stop the animation
+            if(CurrentNodeIndex >= Path.Count)
             {
                 AnimationClock.Stop();
+                AnimationRunning = false;
+                MessageBox.Show(Logs);
                 return;
-
             }
-            int diameter = 50;
-            int idx = 0;
-
-            Vertex v = Path[CurrIdx];
-           
 
             
-            if(CurrIdx > 0)
+
+            // diameter of vertex drawing
+            int diameter = 50;
+
+            // Currnet vertex that will be highligted
+            Vertex CurrentVertex = Path[CurrentNodeIndex];
+            
+            if(CurrentNodeIndex > 0)
             {
-                Vertex vv = Path[CurrIdx- 1];
-                int xx = vv.Location.X - diameter / 2;
-                int yy = vv.Location.Y - diameter / 2;
+                
+                Vertex PreviousVertex = Path[CurrentNodeIndex- 1];
+                
+                // Location of the previous vertex
+                int xx = PreviousVertex.Location.X - diameter / 2;
+                int yy = PreviousVertex.Location.Y - diameter / 2;
+                // Location of the label of the previous vertex
+                int textXX = PreviousVertex.Location.X - diameter / 8;
+                int textYY = PreviousVertex.Location.Y - diameter / 8;
 
-                int textXX = vv.Location.X - diameter / 8;
-                int textYY = vv.Location.Y - diameter / 8;
-
+                // Recolors the previous vertex back to green
                 g.FillEllipse(Brushes.Green, xx, yy, diameter, diameter);
                 g.DrawEllipse(Pens.Black, xx, yy, diameter, diameter);
-                g.DrawString(vv.ID.ToString(), this.Font, Brushes.White, textXX, textYY);
+                g.DrawString(PreviousVertex.ID.ToString(), this.Font, Brushes.White, textXX, textYY);
             }
 
-            int x = v.Location.X - diameter / 2;
-            int y = v.Location.Y - diameter / 2;
+            // Location of the current vertex
+            int x = CurrentVertex.Location.X - diameter / 2;
+            int y = CurrentVertex.Location.Y - diameter / 2;
 
-            int textX = v.Location.X - diameter / 8;
-            int textY = v.Location.Y - diameter / 8;
-
-
+            // Location of the label of the current vertex
+            int textX = CurrentVertex.Location.X - diameter / 8;
+            int textY = CurrentVertex.Location.Y - diameter / 8;
+            
+            // Colors the current vertex to red
             g.FillEllipse(Brushes.Red, x, y, diameter, diameter);
             g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
-            g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);
-            LogBox.Text += Logs[idx++];
-            if (v.Equals(u))
+            g.DrawString(CurrentVertex.ID.ToString(), this.Font, Brushes.White, textX, textY);
+            
+            // If current vertex is equal to the searched index, highlight yellow
+            if (CurrentVertex.Equals(SearchVertex))
             {
+                // Vertex that's being searched is now found.
+                // Color Yellow
                 g.FillEllipse(Brushes.Yellow, x, y, diameter, diameter);
                 g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
-                g.DrawString(v.ID.ToString(), this.Font, Brushes.White, textX, textY);
+                g.DrawString(CurrentVertex.ID.ToString(), this.Font, Brushes.Black, textX, textY);
+                
+                // Recolor the searched vertex back to green after two seconds
+               /* await Task.Delay(2000);
+                g.FillEllipse(Brushes.Green, x, y, diameter, diameter);
+                g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
+                g.DrawString(CurrentVertex.ID.ToString(), this.Font, Brushes.White, textX, textY);*/
 
             }
-            CurrIdx++;
+            Logs += ($"{CurrentVertex.Heuristic} + {CurrentVertex.AccumulatedWeight} = {CurrentVertex.Heuristic + CurrentVertex.AccumulatedWeight}\n");
+
+            // Moves to the next vertex in Path
+            CurrentNodeIndex++;
+        }
+
+        private void PictureBoxGraph_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void PictureBoxGraph_MouseClick_1(object sender, MouseEventArgs e)
+        {// Return if add vertex checkbox is not activated
+            if (!AddVertex.Checked) return;
+
+
+            // check box is now activated
+            // Get the clicked point
+            Point clickPoint = e.Location;
+
+            // Create a new vertex object and add to the list of vertices 
+            Vertices.Add(new Vertex(VertexLabel, VertexIndex, e.Location));
+
+            // Define the circle's  and size
+            int diameter = 50;
+
+            // x and y adjusted so that the point location will be centered
+            // instead of the default upper right corner
+            int x = clickPoint.X - diameter / 2;
+            int y = clickPoint.Y - diameter / 2;
+
+            // Used so that the label of every vertex is in center
+            int textX = e.X - diameter / 8;
+            int textY = e.Y - diameter / 8;
+
+            // Fill a green circle and black outline and add a label
+            g.FillEllipse(Brushes.Green, x, y, diameter, diameter);
+            g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
+            g.DrawString(VertexLabel.ToString(), this.Font, Brushes.White, textX, textY);
+
+            // Refreshes the contents inside the combo box
+            // Updates the drop down menus that contains the vertices
+            RefreshSource();
+
+            // Increment the vertex label and index everytime you add new vertex
+            VertexLabel++;
+            VertexIndex++;
+        }
+        private void AddEdge_CheckedChanged(object sender, EventArgs e)
+        {
+            // Can only add edge if the add edge checklist is checked
+            // If not all the combo boxes are disabled
+            if (AddEdge.Checked)
+            {
+                ComboBoxFrom.Enabled = true;
+                ComboBoxTo.Enabled = true;
+                TextBoxWeight.Enabled = true;
+            }
+            else
+            {
+                ComboBoxFrom.Enabled = false;
+                ComboBoxTo.Enabled = false;
+                TextBoxWeight.Enabled = false;
+            }
+        }
+
+        private void Form1_Activated(object sender, EventArgs e)
+        {
+            // Handle the Activated event to force PictureBox to repaint
+            Form form = (Form)sender;
+            PictureBox pictureBox = form.Controls.OfType<PictureBox>().FirstOrDefault();
+
+            if (pictureBox != null)
+            {
+                pictureBox.Invalidate(); // Forces a repaint
+            }
         }
     }
 }

@@ -11,12 +11,16 @@ namespace SearchAlgorithms
         public char ID ;
         public int IDX;
         public Point Location;
+        public int AccumulatedWeight;
+        public double Heuristic;
         public List<Vertex> Ancestors = new List<Vertex>();
         public Vertex(char id,int idx, Point location)
         {
             this.Location = location;
             this.ID = id;
             this.IDX = idx;
+            this.AccumulatedWeight= 0;
+            this.Heuristic = 0;
         }
 
         public Vertex(Vertex v)
