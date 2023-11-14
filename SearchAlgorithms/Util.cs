@@ -113,12 +113,11 @@ namespace SearchAlgorithms
             }
             res += ($"Priority Queue Size: {queue.Count}.\n");
             List<Vertex> temp = new List<Vertex>(queue);
-            res += ($"Priority Queue elements:\t");
+            res += ($"Priority Queue elements:\n");
             foreach (Vertex v in temp)
             {
-                res += ($"{v.ID} -> {v.AccumulatedWeight}, ");
+                res += ($"\t{v.ID} -> {v.AccumulatedWeight}\n");
             }
-            res += "\n";
             
             res += $"Path Elemnets:\t";
             pathElements.Reverse();
@@ -135,7 +134,12 @@ namespace SearchAlgorithms
         public static string LogBeam(Vertex a, List<Edge> neighbors, List<Vertex> pathElements, List<Vertex> queue, int w)
         {
             string res = "";
-            res += $"W =\t{w}\n";
+            // case where it is beam
+            if(w > 1)
+            {
+                res += $"W =\t{w}\n";
+            }
+            
             res += ($"Current Vertex:\t{a.ID}\n");
             res += ($"Neighbor Heuristic\n");
             foreach (Edge e in neighbors)
@@ -145,12 +149,11 @@ namespace SearchAlgorithms
            
             res += ($"Priority Queue Size:\t{queue.Count}\n");
             List<Vertex> temp = new List<Vertex>(queue);
-            res += ($"Priority Queue elements:\t");
+            res += ($"Priority Queue elements:\n");
             foreach (Vertex v in temp)
             {
-                res += ($"{v.ID} -> {v.Heuristic.ToString("0.00")}, ");
+                res += ($"\t{v.ID} -> {v.Heuristic.ToString("0.00")}\n");
             }
-            res += "\n"; 
             res += $"Path Elemnets:\t";
             pathElements.Reverse();
             foreach (Vertex v in pathElements)
@@ -166,7 +169,33 @@ namespace SearchAlgorithms
         public static string LogAStar(Vertex a, List<Edge> neighbors, List<Vertex> pathElements, List<Vertex> queue)
         {
 
+            string res = "";
+            res += ($"Current Vertex:\t{a.ID}\n");
+            res += ($"Accumulated Weight:\t{a.AccumulatedWeight}\n");
+            res += ($"Heuristic: {a.Heuristic.ToString("0.00")}\n");
+            res += ($"Neighbor Accumulated Weight + Heuristic\n");
+            foreach (Edge e in neighbors)
+            {
+                res += "\t" + e.To.ToString() + " -> " + (e.To.Heuristic + e.Cost).ToString("0.00") + "\n";
+            }
 
+            res += ($"Priority Queue Size:\t{queue.Count}\n");
+            List<Vertex> temp = new List<Vertex>(queue);
+            res += ($"Priority Queue elements:\n");
+            foreach (Vertex v in temp)
+            {
+                res += ($"\t{v.ID} -> {(v.Heuristic + v.AccumulatedWeight).ToString("0.00")}\n");
+            }
+            res += $"Path Elemnets:\t";
+            pathElements.Reverse();
+            foreach (Vertex v in pathElements)
+            {
+                res += (v.ID) + " -> ";
+            }
+            res += $"{a.ID}";
+
+            res += "\n\n";
+            return res;
         }
     }
    

@@ -357,6 +357,7 @@ namespace SearchAlgorithms
 
             while (queue.Count > 0)
             {
+                List<Edge> neighbors = new List<Edge>();
                 Vertex curr = queue[0];
                 queue.RemoveAt(0);
                 order.Add(curr);
@@ -364,6 +365,9 @@ namespace SearchAlgorithms
                 // If vertex being dequeued == searched, 
                 if (curr.Equals(search))
                 {
+
+                    curr.Logs = Util.LogAStar(curr, neighbors, curr.Ancestors, queue);
+                    curr.Logs += "\nFOUND SEARCHED VERTEX!!!";
                     return order;
                 }
                 for (int i = 0; i < dimension; i++)
@@ -383,6 +387,7 @@ namespace SearchAlgorithms
                        
                         //copy inherits curr's ancestor
                         copy.Ancestors.AddRange(curr.Ancestors);
+                        neighbors.Add(new Edge(curr, copy, Matrix[curr.IDX, copy.IDX]));
                         queue.Add(copy);
                     }
                 }
@@ -405,6 +410,7 @@ namespace SearchAlgorithms
 
                     return sumComparison;
                 });
+                curr.Logs = Util.LogAStar(curr, neighbors, curr.Ancestors, queue);
             }
             return order;
         }
