@@ -1,5 +1,7 @@
+using Microsoft.VisualBasic.Devices;
 using System.Drawing.Drawing2D;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
@@ -120,9 +122,11 @@ namespace SearchAlgorithms
             AddEdge.Enabled = false;
             AddVertex.Enabled = false;
             ButtonAdd.Enabled = false;
+            ButtonUndoEdge.Enabled = false;
+            ButtonUndoVertex.Enabled = false;
+            ButtonFinalize.Enabled = false;
 
             // Widges for animation now enabled since the graph is finalized
-            LogBox.Enabled = true;
             ButtonBFS.Enabled = true;
             ButtonDFS.Enabled = true;
             ButtonAStar.Enabled = true;
@@ -145,6 +149,7 @@ namespace SearchAlgorithms
                 return;
             }
             // Enables the pause button and currently set as paused
+            LogBox.Text = string.Empty;
             ButtonPause.Enabled = true;
             isPaused = false;
 
@@ -202,7 +207,11 @@ namespace SearchAlgorithms
             {
                 AnimationClock.Start();
                 isPaused = false;
-                ButtonPause.Text = "Pause";    
+                ButtonPause.Text = "Pause";
+
+                // Cant step back or forward if animation is currently running
+                ButtonStepBack.Enabled = false;
+                ButtonStepForward.Enabled = false;
             }
 
             // Else if currently playing, the clock will pause
@@ -213,6 +222,10 @@ namespace SearchAlgorithms
                 AnimationClock.Stop();
                 isPaused = true;
                 ButtonPause.Text = "Play";
+
+                // can step back and forward iff animation is paused
+                ButtonStepBack.Enabled = true;
+                ButtonStepForward.Enabled = true;
             }
         }
  
@@ -302,11 +315,7 @@ namespace SearchAlgorithms
             Edges.RemoveAt(Edges.Count - 1);
 
             // Updates the picture box after the last vertex was removed
-            PictureBoxGraph.Image= null;
-            RefreshSource();
-            PictureBoxGraph.Update();
-            PaintEdges();
-            PaintVertex();
+            ResetPictureBox();
         }
 
         private void RefreshSource()
@@ -336,11 +345,12 @@ namespace SearchAlgorithms
             {
                 AnimationClock.Stop();
                 AnimationRunning = false;
-                MessageBox.Show(Logs);
+                ResetPictureBox();
                 return;
             }
 
-            
+            // Clears the previous logbox
+            LogBox.Text = "";
 
             // diameter of vertex drawing
             int diameter = 50;
@@ -387,6 +397,8 @@ namespace SearchAlgorithms
                 g.FillEllipse(Brushes.Yellow, x, y, diameter, diameter);
                 g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
                 g.DrawString(CurrentVertex.ID.ToString(), this.Font, Brushes.Black, textX, textY);
+
+                LogBox.Text = CurrentVertex.Logs;
                 
                 // Recolor the searched vertex back to green after two seconds
                /* await Task.Delay(2000);
@@ -395,16 +407,13 @@ namespace SearchAlgorithms
                 g.DrawString(CurrentVertex.ID.ToString(), this.Font, Brushes.White, textX, textY);*/
 
             }
-            Logs += ($"{CurrentVertex.Heuristic} + {CurrentVertex.AccumulatedWeight} = {CurrentVertex.Heuristic + CurrentVertex.AccumulatedWeight}\n");
+           
+            LogBox.Text = CurrentVertex.Logs;
 
             // Moves to the next vertex in Path
             CurrentNodeIndex++;
         }
 
-        private void PictureBoxGraph_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void PictureBoxGraph_MouseClick_1(object sender, MouseEventArgs e)
         {// Return if add vertex checkbox is not activated
@@ -471,6 +480,30 @@ namespace SearchAlgorithms
             {
                 pictureBox.Invalidate(); // Forces a repaint
             }
+        }
+
+        private void ResetPictureBox()
+        {
+            PictureBoxGraph.Image = null;
+            RefreshSource();
+            PictureBoxGraph.Update();
+            PaintEdges();
+            PaintVertex();
+        }
+
+        private void ButtonStepBack_Click(object sender, EventArgs e)
+        {
+            if (CurrentNodeIndex == 0) return;
+            CurrentNodeIndex--;
+            ButtonPause_Click(sender, e);
+            
+        }
+
+        private void ButtonStepForward_Click(object sender, EventArgs e)
+        {
+            if (CurrentNodeIndex == Path.Count - 1) return;
+            CurrentNodeIndex++;
+            ButtonPause_Click(sender, e);
         }
     }
 }

@@ -14,6 +14,13 @@ namespace SearchAlgorithms
         public int AccumulatedWeight;
         public double Heuristic;
         public List<Vertex> Ancestors = new List<Vertex>();
+        
+        /* Current Queue: 
+         * Paths with cost
+         * Queue Size 
+         * Elements Inside Queue
+         */
+        public string Logs;
         public Vertex(char id,int idx, Point location)
         {
             this.Location = location;
@@ -21,6 +28,7 @@ namespace SearchAlgorithms
             this.IDX = idx;
             this.AccumulatedWeight= 0;
             this.Heuristic = 0;
+            this.Logs = "";
         }
 
         public Vertex(Vertex v)

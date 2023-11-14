@@ -63,11 +63,16 @@ namespace SearchAlgorithms
             while (stack.Count > 0)
             {
                 Vertex curr = stack.Pop();
+                List<Edge> Neighbors = new List<Edge>();
+                List<Vertex> PathElements = new List<Vertex>();
                 order.Add(curr);
+
 
                 // If vertex being popped is the vertex being searched
                 if (curr.Equals(search))
                 {
+                    curr.Logs = Util.LogDFS(curr, Neighbors, curr.Ancestors, stack);
+                    curr.Logs += "\nFOUND SEARCHED VERTEX!!!";
                     return order;
                 }
                 for (int i = 0; i < dimension; i++)
@@ -95,8 +100,22 @@ namespace SearchAlgorithms
                         //copy inherits curr's ancestor
                         copy.Ancestors.AddRange(curr.Ancestors);
                         stack.Push(copy);
+
+                        Neighbors.Add(new Edge(curr, copy, Matrix[curr.IDX, copy.IDX]));          
+
                     }
+                    
                 }
+                PathElements.AddRange(curr.Ancestors);
+                curr.Logs = Util.LogDFS(curr, Neighbors, PathElements, stack);
+
+                /* Current Queue: 
+                 * Paths with cost
+                 * Queue Size 
+                 * Elements Inside Queue
+                 * Path Elements
+                 */
+
             }
             return order;
         }
@@ -117,9 +136,14 @@ namespace SearchAlgorithms
                 Vertex curr = queue.Dequeue();
                 order.Add(curr);
 
+                List<Edge> neighbors = new List<Edge>();
+
                 // If vertex being dequeued == searched, 
                 if (curr.Equals(search))
                 {
+
+                    curr.Logs = Util.LogBFS(curr, neighbors, curr.Ancestors, queue);
+                    curr.Logs += "\nFOUND SEARCHED VERTEX!!!";
                     return order;
                 }
                 for (int i = 0; i < dimension; i++)
@@ -147,8 +171,10 @@ namespace SearchAlgorithms
                         //copy inherits curr's ancestor
                         copy.Ancestors.AddRange(curr.Ancestors);
                         queue.Enqueue(copy);
+                        neighbors.Add(new Edge(curr, copy, Matrix[curr.IDX, copy.IDX]));
                     }
                 }
+                curr.Logs = Util.LogBFS(curr, neighbors, curr.Ancestors, queue);
             }
             return order;
         }
@@ -174,9 +200,14 @@ namespace SearchAlgorithms
                 queue.RemoveAt(0);
                 order.Add(curr);
 
+
+                List<Edge> neighbors = new List<Edge>();
+
                 // If vertex being dequeued == searched, 
                 if (curr.Equals(search))
                 {
+                    curr.Logs = Util.LogBNB(curr, neighbors, curr.Ancestors, queue);
+                    curr.Logs += "\nFOUND SEARCHED VERTEX!!!";
                     return order;
                 }
                 for (int i = 0; i < dimension; i++)
@@ -196,6 +227,7 @@ namespace SearchAlgorithms
                         copy.Ancestors.AddRange(curr.Ancestors);
                         copy.AccumulatedWeight += (curr.AccumulatedWeight + Matrix[curr.IDX, i]);
                         queue.Add(copy);
+                        neighbors.Add(new Edge(curr, copy, Matrix[curr.IDX, copy.IDX]));
                     }
                 }
                 // sort list based on accumulated weight
@@ -211,6 +243,7 @@ namespace SearchAlgorithms
 
                     return sumComparison;
                 });
+                curr.Logs = Util.LogBNB(curr, neighbors, curr.Ancestors, queue);
             }
             return order;
         }
@@ -235,6 +268,8 @@ namespace SearchAlgorithms
 
             while (queue.Count > 0)
             {
+                List<Edge> neighbors = new List<Edge>();
+
                 Vertex curr = queue[0];
                 queue.RemoveAt(0);
                 order.Add(curr);
@@ -242,6 +277,9 @@ namespace SearchAlgorithms
                 // If vertex being dequeued == searched, 
                 if (curr.Equals(search))
                 {
+
+                    curr.Logs = Util.LogBeam(curr, neighbors, curr.Ancestors, queue, width);
+                    curr.Logs += "\nFOUND SEARCHED VERTEX!!!";
                     return order;
                 }
                 for (int i = 0; i < dimension; i++)
@@ -261,6 +299,7 @@ namespace SearchAlgorithms
                         //copy inherits curr's ancestor
                         copy.Ancestors.AddRange(curr.Ancestors);
                         queue.Add(copy);
+                        neighbors.Add(new Edge(curr, copy, Matrix[curr.IDX, copy.IDX]));
                     }
                 }
                 // sort list based on heuristic
@@ -280,10 +319,10 @@ namespace SearchAlgorithms
                 int NumToRemove = 0;
                 if(queue.Count > width)
                 {
-                    NumToRemove = width - queue.Count;
+                    NumToRemove = queue.Count - width;
                     queue.RemoveRange(width, NumToRemove);
                 }
-
+                curr.Logs = Util.LogBeam(curr, neighbors, curr.Ancestors, queue, width);
 
             }
             return order;

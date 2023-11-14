@@ -49,7 +49,6 @@
             this.ComboBoxSearch = new System.Windows.Forms.ComboBox();
             this.ButtonUndoVertex = new System.Windows.Forms.Button();
             this.ButtonUndoEdge = new System.Windows.Forms.Button();
-            this.LogBox = new System.Windows.Forms.RichTextBox();
             this.AnimationClock = new System.Windows.Forms.Timer(this.components);
             this.PanelBottom = new System.Windows.Forms.Panel();
             this.PanelNavigation = new System.Windows.Forms.Panel();
@@ -64,6 +63,8 @@
             this.PanelLeft = new System.Windows.Forms.Panel();
             this.PictureBoxGraph = new System.Windows.Forms.PictureBox();
             this.PanelRight = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.LogBox = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.TrackbarSpeed)).BeginInit();
             this.PanelNavigation.SuspendLayout();
             this.PanelTop.SuspendLayout();
@@ -71,6 +72,7 @@
             this.PanelLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxGraph)).BeginInit();
             this.PanelRight.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // ButtonRun
@@ -293,23 +295,9 @@
             this.ButtonUndoEdge.UseVisualStyleBackColor = true;
             this.ButtonUndoEdge.Click += new System.EventHandler(this.button1_Click);
             // 
-            // LogBox
-            // 
-            this.LogBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.LogBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.LogBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogBox.ForeColor = System.Drawing.Color.White;
-            this.LogBox.Location = new System.Drawing.Point(24, 279);
-            this.LogBox.Name = "LogBox";
-            this.LogBox.ReadOnly = true;
-            this.LogBox.Size = new System.Drawing.Size(407, 179);
-            this.LogBox.TabIndex = 25;
-            this.LogBox.Text = "";
-            // 
             // AnimationClock
             // 
-            this.AnimationClock.Interval = 1000;
+            this.AnimationClock.Interval = 2000;
             this.AnimationClock.Tick += new System.EventHandler(this.AnimationClock_Tick);
             // 
             // PanelBottom
@@ -356,6 +344,7 @@
             this.ButtonStepForward.TabIndex = 22;
             this.ButtonStepForward.Text = "Step Forward";
             this.ButtonStepForward.UseVisualStyleBackColor = true;
+            this.ButtonStepForward.Click += new System.EventHandler(this.ButtonStepForward_Click);
             // 
             // ButtonStepBack
             // 
@@ -366,6 +355,7 @@
             this.ButtonStepBack.TabIndex = 21;
             this.ButtonStepBack.Text = "Step Back";
             this.ButtonStepBack.UseVisualStyleBackColor = true;
+            this.ButtonStepBack.Click += new System.EventHandler(this.ButtonStepBack_Click);
             // 
             // PanelTop
             // 
@@ -456,11 +446,11 @@
             // PanelRight
             // 
             this.PanelRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(117)))), ((int)(((byte)(230)))), ((int)(((byte)(218)))));
+            this.PanelRight.Controls.Add(this.panel1);
             this.PanelRight.Controls.Add(this.ButtonUndoVertex);
             this.PanelRight.Controls.Add(this.AddEdge);
             this.PanelRight.Controls.Add(this.ComboBoxFrom);
             this.PanelRight.Controls.Add(this.AddVertex);
-            this.PanelRight.Controls.Add(this.LogBox);
             this.PanelRight.Controls.Add(this.ComboBoxTo);
             this.PanelRight.Controls.Add(this.ButtonUndoEdge);
             this.PanelRight.Controls.Add(this.TextBoxWeight);
@@ -471,6 +461,28 @@
             this.PanelRight.Name = "PanelRight";
             this.PanelRight.Size = new System.Drawing.Size(448, 480);
             this.PanelRight.TabIndex = 32;
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.LogBox);
+            this.panel1.Location = new System.Drawing.Point(16, 266);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(415, 196);
+            this.panel1.TabIndex = 23;
+            // 
+            // LogBox
+            // 
+            this.LogBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(241)))), ((int)(((byte)(244)))));
+            this.LogBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.LogBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LogBox.Location = new System.Drawing.Point(0, 0);
+            this.LogBox.Name = "LogBox";
+            this.LogBox.Size = new System.Drawing.Size(415, 196);
+            this.LogBox.TabIndex = 13;
+            this.LogBox.Text = "";
             // 
             // Form1
             // 
@@ -499,6 +511,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxGraph)).EndInit();
             this.PanelRight.ResumeLayout(false);
             this.PanelRight.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -525,7 +538,6 @@
         private ComboBox ComboBoxSearch;
         private Button ButtonUndoVertex;
         private Button ButtonUndoEdge;
-        private RichTextBox LogBox;
         private System.Windows.Forms.Timer AnimationClock;
         private Panel PanelBottom;
         private Panel PanelNavigation;
@@ -540,5 +552,7 @@
         private Label Heading;
         private Label label2;
         private Label label1;
+        private Panel panel1;
+        private RichTextBox LogBox;
     }
 }
