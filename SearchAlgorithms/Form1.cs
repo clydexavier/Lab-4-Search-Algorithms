@@ -9,9 +9,7 @@ namespace SearchAlgorithms
 {
     public partial class Form1 : Form
     {
-        public string Logs = "";
-
-
+       
         public bool AnimationPaused = false;
         public bool AnimationRunning = false;
         // Contains all the ertices in the graph
@@ -137,6 +135,7 @@ namespace SearchAlgorithms
             ComboBoxStart.Enabled = true;
             ComboBoxSearch.Enabled = true;
             ButtonRun.Enabled = true;
+            ButtonReset.Enabled = true;
             TrackbarSpeed.Enabled = true;
             Graph.initMtx(Vertices.Count);
             Graph.updateMtx(Edges);
@@ -345,15 +344,21 @@ namespace SearchAlgorithms
             /*
              * EACH TICK, THE CURRENT VERTEX IN THE PATHS WILL BE HIGHLIGHTED
              */
-
-            // if index out of bounds, stop the animation
-            if(CurrentNodeIndex >= Path.Count)
+            if (CurrentNodeIndex >= Path.Count)
             {
                 AnimationClock.Stop();
                 AnimationRunning = false;
                 ResetPictureBox();
                 return;
             }
+            RenderVertex();
+            // if index out of bounds, stop the animation
+            
+        }
+
+        private void RenderVertex()
+        {
+            
 
             // Clears the previous logbox
             LogBox.Text = "";
@@ -363,12 +368,12 @@ namespace SearchAlgorithms
 
             // Currnet vertex that will be highligted
             Vertex CurrentVertex = Path[CurrentNodeIndex];
-            
-            if(CurrentNodeIndex > 0)
+
+            if (CurrentNodeIndex > 0)
             {
-                
-                Vertex PreviousVertex = Path[CurrentNodeIndex- 1];
-                
+
+                Vertex PreviousVertex = Path[CurrentNodeIndex - 1];
+
                 // Location of the previous vertex
                 int xx = PreviousVertex.Location.X - diameter / 2;
                 int yy = PreviousVertex.Location.Y - diameter / 2;
@@ -389,12 +394,12 @@ namespace SearchAlgorithms
             // Location of the label of the current vertex
             int textX = CurrentVertex.Location.X - diameter / 8;
             int textY = CurrentVertex.Location.Y - diameter / 8;
-            
+
             // Colors the current vertex to red
             g.FillEllipse(Brushes.Red, x, y, diameter, diameter);
             g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
             g.DrawString(CurrentVertex.ID.ToString(), this.Font, Brushes.White, textX, textY);
-            
+
             // If current vertex is equal to the searched index, highlight yellow
             if (CurrentVertex.Equals(SearchVertex))
             {
@@ -405,15 +410,15 @@ namespace SearchAlgorithms
                 g.DrawString(CurrentVertex.ID.ToString(), this.Font, Brushes.Black, textX, textY);
 
                 LogBox.Text = CurrentVertex.Logs;
-                
+
                 // Recolor the searched vertex back to green after two seconds
-               /* await Task.Delay(2000);
-                g.FillEllipse(Brushes.Blue, x, y, diameter, diameter);
-                g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
-                g.DrawString(CurrentVertex.ID.ToString(), this.Font, Brushes.White, textX, textY);*/
+                /* await Task.Delay(2000);
+                 g.FillEllipse(Brushes.Blue, x, y, diameter, diameter);
+                 g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
+                 g.DrawString(CurrentVertex.ID.ToString(), this.Font, Brushes.White, textX, textY);*/
 
             }
-           
+
             LogBox.Text = CurrentVertex.Logs;
 
             // Moves to the next vertex in Path
@@ -482,17 +487,45 @@ namespace SearchAlgorithms
 
         private void ButtonStepBack_Click(object sender, EventArgs e)
         {
-            if (CurrentNodeIndex == 0) return;
-            CurrentNodeIndex--;
-            ButtonPause_Click(sender, e);
-            
+            if (CurrentNodeIndex <= 1)
+            {
+                ButtonStepBack.Enabled = false;
+                return;
+            }
+            ButtonStepForward.Enabled = true;
+            CurrentNodeIndex -= 2;
+
+            // diameter of vertex drawing
+            int diameter = 50;
+
+            // Currnet vertex that will be highligted
+            Vertex CurrentVertex = Path[CurrentNodeIndex + 1];
+            // Location of the current vertex
+            int x = CurrentVertex.Location.X - diameter / 2;
+            int y = CurrentVertex.Location.Y - diameter / 2;
+
+            // Location of the label of the current vertex
+            int textX = CurrentVertex.Location.X - diameter / 8;
+            int textY = CurrentVertex.Location.Y - diameter / 8;
+
+            // Colors the current vertex to red
+            g.FillEllipse(Brushes.Blue, x, y, diameter, diameter);
+            g.DrawEllipse(Pens.Black, x, y, diameter, diameter);
+            g.DrawString(CurrentVertex.ID.ToString(), this.Font, Brushes.White, textX, textY);
+
+            RenderVertex();
+
         }
 
         private void ButtonStepForward_Click(object sender, EventArgs e)
         {
-            if (CurrentNodeIndex == Path.Count - 1) return;
-            CurrentNodeIndex++;
-            ButtonPause_Click(sender, e);
+            if (CurrentNodeIndex >= Path.Count) 
+            {
+                ButtonStepForward.Enabled = false;
+                return; 
+            }
+            ButtonStepBack.Enabled = true;
+           RenderVertex();
         }
 
         private void AddEdge_CheckedChanged_1(object sender, EventArgs e)
@@ -509,6 +542,52 @@ namespace SearchAlgorithms
                 ComboBoxTo.Enabled = false;
                 TextBoxWeight.Enabled = false;
             }
+        }
+
+        private void ButtonReset_Click(object sender, EventArgs e)
+        {
+            ComboBoxFrom.Enabled = true;
+            ComboBoxTo.Enabled = true;
+            TextBoxWeight.Enabled = true;
+            AddEdge.Enabled = true;
+            AddVertex.Enabled = true;
+            ButtonAdd.Enabled = true;
+            ButtonUndoEdge.Enabled = true;
+            ButtonUndoVertex.Enabled = true;
+            ButtonFinalize.Enabled = true;
+
+            // Widges for animation now enabled since the graph is finalized
+            TextBoxBeam.Enabled = false;
+            ButtonBFS.Enabled = false;
+            ButtonDFS.Enabled = false;
+            ButtonAStar.Enabled = false;
+            ButtonBeam.Enabled = false;
+            ButtonBnB.Enabled = false;
+            ButtonHC.Enabled = false;
+            ComboBoxStart.Enabled = false;
+            ComboBoxSearch.Enabled = false;
+            ButtonRun.Enabled = false;
+            ButtonReset.Enabled = false;
+            TrackbarSpeed.Enabled = false;
+
+            AnimationPaused = false;
+            AnimationRunning = false;
+            Vertices.Clear();
+            Edges.Clear();
+            Graph = new Graph();
+            Path.Clear();
+            CurrentNodeIndex = 0;
+
+            Vertex SearchVertex = null;
+            Vertex StartVertex = null;
+            g = PictureBoxGraph.CreateGraphics();
+            isPaused = true;
+            VertexLabel = 'A';
+            VertexIndex = 0;
+
+            PictureBoxGraph.Image = null;
+            RefreshSource();
+            PictureBoxGraph.Update();
         }
     }
 }

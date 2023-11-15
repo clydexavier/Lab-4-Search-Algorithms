@@ -56,6 +56,7 @@
             this.PanelTop = new System.Windows.Forms.Panel();
             this.Heading = new System.Windows.Forms.Label();
             this.PanelTopNavigation = new System.Windows.Forms.Panel();
+            this.ButtonReset = new System.Windows.Forms.Button();
             this.TextBoxBeam = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -85,7 +86,7 @@
             this.ButtonRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonRun.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.ButtonRun.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.ButtonRun.Location = new System.Drawing.Point(831, 6);
+            this.ButtonRun.Location = new System.Drawing.Point(907, 8);
             this.ButtonRun.Name = "ButtonRun";
             this.ButtonRun.Size = new System.Drawing.Size(103, 54);
             this.ButtonRun.TabIndex = 0;
@@ -389,6 +390,7 @@
             // PanelTopNavigation
             // 
             this.PanelTopNavigation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(241)))), ((int)(((byte)(244)))));
+            this.PanelTopNavigation.Controls.Add(this.ButtonReset);
             this.PanelTopNavigation.Controls.Add(this.TextBoxBeam);
             this.PanelTopNavigation.Controls.Add(this.label2);
             this.PanelTopNavigation.Controls.Add(this.label1);
@@ -406,6 +408,21 @@
             this.PanelTopNavigation.Name = "PanelTopNavigation";
             this.PanelTopNavigation.Size = new System.Drawing.Size(1339, 77);
             this.PanelTopNavigation.TabIndex = 30;
+            // 
+            // ButtonReset
+            // 
+            this.ButtonReset.BackColor = System.Drawing.Color.Red;
+            this.ButtonReset.Enabled = false;
+            this.ButtonReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonReset.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.ButtonReset.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.ButtonReset.Location = new System.Drawing.Point(1057, 8);
+            this.ButtonReset.Name = "ButtonReset";
+            this.ButtonReset.Size = new System.Drawing.Size(103, 54);
+            this.ButtonReset.TabIndex = 27;
+            this.ButtonReset.Text = "Reset";
+            this.ButtonReset.UseVisualStyleBackColor = false;
+            this.ButtonReset.Click += new System.EventHandler(this.ButtonReset_Click);
             // 
             // TextBoxBeam
             // 
@@ -613,5 +630,6 @@
         private RadioButton AddVertex;
         private Panel panel2;
         private TextBox TextBoxBeam;
+        private Button ButtonReset;
     }
 }
