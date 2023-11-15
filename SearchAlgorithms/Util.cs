@@ -137,7 +137,7 @@ namespace SearchAlgorithms
             // case where it is beam
             if(w > 1)
             {
-                res += $"W =\t{w}\n";
+                res += $"Beam Width =\t{w}\n";
             }
             
             res += ($"Current Vertex:\t{a.ID}\n");

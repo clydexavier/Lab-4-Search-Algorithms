@@ -478,6 +478,7 @@
             this.PictureBoxGraph.Size = new System.Drawing.Size(883, 480);
             this.PictureBoxGraph.TabIndex = 11;
             this.PictureBoxGraph.TabStop = false;
+            this.PictureBoxGraph.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBoxGraph_Paint);
             this.PictureBoxGraph.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PictureBoxGraph_MouseClick_1);
             // 
             // PanelRight

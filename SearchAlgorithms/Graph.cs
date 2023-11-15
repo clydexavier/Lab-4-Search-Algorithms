@@ -42,7 +42,7 @@ namespace SearchAlgorithms
         public void updateMtx (List<Edge> edges) 
         {
             // Update the matrix for each edge in edges
-            foreach(Edge e in edges) 
+            foreach (Edge e in edges)
             {
                 // Undirected graph
                 Matrix[e.From.IDX, e.To.IDX] = e.Cost;

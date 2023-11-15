@@ -175,6 +175,11 @@ namespace SearchAlgorithms
                     MessageBox.Show("Enter valid value.");
                     return;
                 }
+                else if (w <= 1)
+                {
+                    MessageBox.Show("Enter values greater than 1.");
+                    return;
+                }
                 Path = Graph.Beam_order(Vertices, StartVertex, SearchVertex, Vertices.Count, w);
             }
             else if (ButtonHC.Checked)
@@ -435,7 +440,8 @@ namespace SearchAlgorithms
             // Get the clicked point
             Point clickPoint = e.Location;
 
-            // Create a new vertex object and add to the list of vertices 
+            // Create a new vertex object and add to the list of vertices
+           
             Vertices.Add(new Vertex(VertexLabel, VertexIndex, e.Location));
 
             // Define the circle's  and size
@@ -588,6 +594,12 @@ namespace SearchAlgorithms
             PictureBoxGraph.Image = null;
             RefreshSource();
             PictureBoxGraph.Update();
+        }
+
+        private void PictureBoxGraph_Paint(object sender, PaintEventArgs e)
+        {
+            PaintEdges();
+            PaintVertex();
         }
     }
 }
